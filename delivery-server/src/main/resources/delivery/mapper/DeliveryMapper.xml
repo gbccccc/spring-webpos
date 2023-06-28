@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="delivery.mapper.DeliveryMapper">
+
+    <select id="getAllDeliveries" resultType="delivery.pojo.Delivery">
+        USE deliverydb;
+        SELECT *
+        FROM delivery
+    </select>
+
+    <select id="getDelivery" resultType="delivery.pojo.Delivery">
+        USE deliverydb;
+        SELECT *
+        FROM delivery
+        WHERE deliveryId = #{deliveryId}
+    </select>
+
+    <select id="getDeliveryNum" resultType="int">
+        USE deliverydb;
+        SELECT COUNT(*)
+        FROM delivery
+    </select>
+
+    <insert id="insertDelivery">
+        USE deliverydb;
+        INSERT INTO delivery VALUE (#{deliveryId}, #{orderId})
+    </insert>
+
+</mapper>

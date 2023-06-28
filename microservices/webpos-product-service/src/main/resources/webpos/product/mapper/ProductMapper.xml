@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="webpos.product.mapper.ProductMapper">
+    <resultMap id="Product" type="webpos.product.pojo.Product">
+        <id property="asin" column="id"/>
+        <result property="title" column="title"/>
+        <result property="main_cat" column="main_cat"/>
+        <collection property="category" column="id" select="getCategories"/>
+        <collection property="imageURLHighRes" column="id" select="getImagesURLHighres"/>
+    </resultMap>
+
+    <select id="getProducts" resultMap="Product">
+        USE webpos;
+        SELECT *
+        FROM products
+    </select>
+
+    <select id="getProductById" resultMap="Product">
+        USE webpos;
+        SELECT *
+        FROM products
+        WHERE products.id = #{id}
+    </select>
+
+    <select id="getCategories" resultType="String">
+        USE webpos;
+        SELECT category
+        FROM category
+        WHERE id = #{id}
+    </select>
+
+    <select id="getImagesURLHighres" resultType="String">
+        USE webpos;
+        SELECT image_url_highres
+        FROM image_url_highres
+        WHERE id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+server:
+  port: 8093
+spring:
+  application:
+    name: delivery-server
+  cloud:
+    function:
+      definition: orderConsumer
+    stream:
+      function:
+        bindings:
+          orderConsumer-in-0: order
+      bindings:
+        order:
+          destination: order
+mybatis:
+  config-location: classpath:mybatis-config.xml
