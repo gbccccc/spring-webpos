@@ -13,5 +13,5 @@ public interface OrderDB {
 
     public boolean addOrder(Order order);
 
-    public int getOderNum();
+    public int getOrderNum();
 }

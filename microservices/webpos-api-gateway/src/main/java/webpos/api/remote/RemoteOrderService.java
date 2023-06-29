@@ -32,6 +32,6 @@ public class RemoteOrderService {
     }
 
     public Mono<Boolean> addOrder(Order order) {
-        return webClient.post().uri("http://order-service/new-order", order).retrieve().bodyToMono(Boolean.class);
+        return webClient.post().uri("http://order-service/new-order").bodyValue(order).retrieve().bodyToMono(Boolean.class);
     }
 }

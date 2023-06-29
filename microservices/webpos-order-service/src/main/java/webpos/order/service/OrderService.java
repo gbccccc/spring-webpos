@@ -25,25 +25,33 @@ public class OrderService {
     }
 
     public Flux<Order> getOrdersByUserId(String userId) {
-        return Flux.fromIterable(orderDB.getOrdersByUserId(userId));
+        return Mono.just(orderDB).flatMapIterable(
+                orderDB1 -> orderDB1.getOrdersByUserId(userId)
+        );
     }
 
     public Flux<Order> getAllOrders() {
-        return Flux.fromIterable(orderDB.getAllOrders());
+        return Mono.just(orderDB).flatMapIterable(OrderDB::getAllOrders);
     }
 
     public Mono<Order> getOrderById(String orderId) {
-        return Mono.just(orderDB.getOrder(orderId));
+        return Mono.just(orderDB).map(
+                orderDB1 -> orderDB1.getOrder(orderId)
+        ).onErrorResume(e -> Mono.empty());
     }
 
     public Mono<Boolean> addOrder(Order order) {
-        String orderId = String.format("O%07d", orderDB.getOderNum());
-        order.setOrderId(orderId);
-        boolean success = orderDB.addOrder(order);
-        if (success) {
-            streamBridge.send("order", order);
-            return Mono.just(true);
-        }
-        return Mono.just(false);
+        return Mono.just(orderDB).map(
+                orderDB1 -> {
+                    String orderId = String.format("O%07d", orderDB1.getOrderNum());
+                    order.setOrderId(orderId);
+                    boolean success = orderDB1.addOrder(order);
+                    if (success) {
+                        streamBridge.send("order", order);
+                        return true;
+                    }
+                    return false;
+                }
+        );
     }
 }

@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import webpos.product.database.ProductDB;
 import webpos.product.pojo.Product;
 
+
 @Service
 public class ProductService {
     private ProductDB productDB;
@@ -17,10 +18,10 @@ public class ProductService {
     }
 
     public Flux<Product> getProducts() {
-        return Flux.fromIterable(productDB.getProducts());
+        return Mono.just(productDB).flatMapIterable(ProductDB::getProducts);
     }
 
     public Mono<Product> getProductById(String productId) {
-        return Mono.justOrEmpty(productDB.getProduct(productId));
+        return Mono.just(productDB).map(productDB1 -> productDB1.getProduct(productId)).onErrorResume(e -> Mono.empty());
     }
 }

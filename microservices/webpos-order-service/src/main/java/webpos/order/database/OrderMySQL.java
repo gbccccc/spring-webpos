@@ -82,7 +82,7 @@ public class OrderMySQL implements OrderDB {
     }
 
     @Override
-    public int getOderNum() {
+    public int getOrderNum() {
         int num = 0;
         try (SqlSession sqlSession = getSqlSession()) {
             OrderMapper mapper = sqlSession.getMapper(OrderMapper.class);
