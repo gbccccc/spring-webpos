@@ -7,8 +7,6 @@ import reactor.core.publisher.Mono;
 import webpos.product.database.ProductDB;
 import webpos.product.pojo.Product;
 
-import java.util.List;
-
 @Service
 public class ProductService {
     private ProductDB productDB;

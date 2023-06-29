@@ -1,6 +1,5 @@
 package webpos.product.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,9 +7,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import webpos.product.pojo.Product;
 import webpos.product.service.ProductService;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
