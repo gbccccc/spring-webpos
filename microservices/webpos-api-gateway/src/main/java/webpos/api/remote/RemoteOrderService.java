@@ -6,44 +6,37 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.api.dto.Order;
 
 import java.util.List;
 
 @Service
 public class RemoteOrderService {
-    private RestTemplate restTemplate;
+    private WebClient webClient;
 
     @Autowired
-    @Qualifier("rt")
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    @Qualifier("wbb")
+    public void setWebClient(WebClient.Builder webClientBuilder) {
+        webClient = webClientBuilder.build();
     }
 
-    public Order getOrder(String orderId) {
-        String url = "http://order-service/orders/" + orderId;
-        return restTemplate.exchange(url,
-                HttpMethod.GET, null, Order.class).getBody();
+    public Mono<Order> getOrder(String orderId) {
+        return webClient.get().uri("http://order-service/orders/" + orderId).retrieve().bodyToMono(Order.class);
     }
 
-    public List<Order> getOrders() {
-        String url = "http://order-service/orders";
-        ParameterizedTypeReference<List<Order>> responseBodyType = new ParameterizedTypeReference<>() {
-        };
-        return restTemplate.exchange(url,
-                HttpMethod.GET, null, responseBodyType).getBody();
+    public Flux<Order> getOrders() {
+        return webClient.get().uri("http://order-service/orders").retrieve().bodyToFlux(Order.class);
     }
 
-    public List<Order> getOrders(String userId) {
-        String url = "http://order-service/orders" + "?userId=" + userId;
-        ParameterizedTypeReference<List<Order>> responseBodyType = new ParameterizedTypeReference<>() {
-        };
-        return restTemplate.exchange(url,
-                HttpMethod.GET, null, responseBodyType).getBody();
+    public Flux<Order> getOrders(String userId) {
+        return webClient.get().uri("http://order-service/orders" + "?userId=" + userId)
+                .retrieve().bodyToFlux(Order.class);
     }
 
-    public boolean addOrder(Order order) {
-        String url = "http://order-service/new-order";
-        return Boolean.TRUE.equals(restTemplate.postForEntity(url, order, Boolean.class).getBody());
+    public Mono<Boolean> addOrder(Order order) {
+        return webClient.post().uri("http://order-service/new-order", order).retrieve().bodyToMono(Boolean.class);
     }
 }

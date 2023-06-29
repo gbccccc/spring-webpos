@@ -2,6 +2,8 @@ package webpos.product.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.product.database.ProductDB;
 import webpos.product.pojo.Product;
 
@@ -16,11 +18,11 @@ public class ProductService {
         this.productDB = productDB;
     }
 
-    public List<Product> getProducts() {
-        return productDB.getProducts();
+    public Flux<Product> getProducts() {
+        return Flux.fromIterable(productDB.getProducts());
     }
 
-    public Product getProductById(String productId) {
-        return productDB.getProduct(productId);
+    public Mono<Product> getProductById(String productId) {
+        return Mono.justOrEmpty(productDB.getProduct(productId));
     }
 }

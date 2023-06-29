@@ -32,6 +32,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
 
@@ -51,6 +52,12 @@ public class ApiGatewayApplication {
     @LoadBalanced
     public RestTemplate loadBalancedRestTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean("wbb")
+    @LoadBalanced
+    public WebClient.Builder loadBalancedWebClientBuilder() {
+        return WebClient.builder();
     }
 
     /**

@@ -1,11 +1,10 @@
 package webpos.order.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.order.pojo.Order;
 import webpos.order.service.OrderService;
-
-import java.util.List;
 
 @RestController
 public class OrderController {
@@ -16,19 +15,17 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable String orderId) {
-        Order order = service.getOrderById(orderId);
-        return order == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(order);
+    public Mono<Order> getOrder(@PathVariable String orderId) {
+        return service.getOrderById(orderId);
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getOrdersByUserId(@RequestParam(required = false) String userId) {
-        List<Order> orders = userId == null ? service.getAllOrders() : service.getOrdersByUserId(userId);
-        return ResponseEntity.ok(orders);
+    public Flux<Order> getOrdersByUserId(@RequestParam(required = false) String userId) {
+        return userId == null ? service.getAllOrders() : service.getOrdersByUserId(userId);
     }
 
     @PostMapping("/new-order")
-    public ResponseEntity<Boolean> addOrder(@RequestBody Order order) {
-        return ResponseEntity.ok(service.addOrder(order));
+    public Mono<Boolean> addOrder(@RequestBody Order order) {
+        return service.addOrder(order);
     }
 }

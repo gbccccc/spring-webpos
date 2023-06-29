@@ -3,6 +3,8 @@ package webpos.order.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.order.database.OrderDB;
 import webpos.order.pojo.Order;
 
@@ -24,26 +26,26 @@ public class OrderService {
         this.streamBridge = streamBridge;
     }
 
-    public List<Order> getOrdersByUserId(String userId) {
-        return orderDB.getOrdersByUserId(userId);
+    public Flux<Order> getOrdersByUserId(String userId) {
+        return Flux.fromIterable(orderDB.getOrdersByUserId(userId));
     }
 
-    public List<Order> getAllOrders() {
-        return orderDB.getAllOrders();
+    public Flux<Order> getAllOrders() {
+        return Flux.fromIterable(orderDB.getAllOrders());
     }
 
-    public Order getOrderById(String orderId) {
-        return orderDB.getOrder(orderId);
+    public Mono<Order> getOrderById(String orderId) {
+        return Mono.just(orderDB.getOrder(orderId));
     }
 
-    public boolean addOrder(Order order) {
+    public Mono<Boolean> addOrder(Order order) {
         String orderId = String.format("O%07d", orderDB.getOderNum());
         order.setOrderId(orderId);
         boolean success = orderDB.addOrder(order);
         if (success) {
             streamBridge.send("order", order);
-            return true;
+            return Mono.just(true);
         }
-        return false;
+        return Mono.just(false);
     }
 }

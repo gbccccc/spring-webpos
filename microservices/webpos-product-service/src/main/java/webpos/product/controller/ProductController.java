@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.product.pojo.Product;
 import webpos.product.service.ProductService;
 
@@ -19,14 +21,12 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> allProducts() {
-        List<Product> products = service.getProducts();
-        return ResponseEntity.ok(products);
+    public Flux<Product> allProducts() {
+        return service.getProducts();
     }
 
     @GetMapping("/products/{productId}")
-    public ResponseEntity<Product> product(@PathVariable String productId) {
-        Product product = service.getProductById(productId);
-        return product == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(product);
+    public Mono<Product> product(@PathVariable String productId) {
+        return service.getProductById(productId);
     }
 }

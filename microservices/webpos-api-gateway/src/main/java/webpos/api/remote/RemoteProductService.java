@@ -6,31 +6,28 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import webpos.api.dto.Product;
 
 import java.util.List;
 
 @Service
 public class RemoteProductService {
-    private RestTemplate restTemplate;
+    private WebClient webClient;
 
     @Autowired
-    @Qualifier("rt")
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    @Qualifier("wbb")
+    public void setWebClient(WebClient.Builder webClientBuilder) {
+        webClient = webClientBuilder.build();
     }
 
-    public List<Product> getProducts() {
-        String url = "http://product-service/products";
-        ParameterizedTypeReference<List<Product>> responseBodyType = new ParameterizedTypeReference<>() {
-        };
-        return restTemplate.exchange(url,
-                HttpMethod.GET, null, responseBodyType).getBody();
+    public Flux<Product> getProducts() {
+        return webClient.get().uri("http://product-service/products").retrieve().bodyToFlux(Product.class);
     }
 
-    public Product getProductById(String productId) {
-        String url = "http://product-service/products/" + productId;
-        return restTemplate.exchange(url,
-                HttpMethod.GET, null, Product.class).getBody();
+    public Mono<Product> getProductById(String productId) {
+        return webClient.get().uri("http://product-service/products/" + productId).retrieve().bodyToMono(Product.class);
     }
 }
