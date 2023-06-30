@@ -36,8 +36,8 @@ DROP TABLE IF EXISTS order_info;
 
 CREATE TABLE order_info
 (
-    id       VARCHAR(20) NOT NULL,
-    userId   VARCHAR(20) NOT NULL,
+    id     VARCHAR(20) NOT NULL,
+    userId VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -46,8 +46,18 @@ DROP TABLE IF EXISTS order_detail;
 
 CREATE TABLE order_detail
 (
-    orderId       VARCHAR(20) NOT NULL,
+    orderId  VARCHAR(20) NOT NULL,
     itemAsin VARCHAR(20) NOT NULL,
     itemNum  INT DEFAULT 1
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE user
+(
+    id   VARCHAR(20) NOT NULL,
+    pass VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

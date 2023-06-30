@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import webpos.api.dto.Order;
+import webpos.api.dto.OrderApplication;
 
 @Service
 public class RemoteOrderService {
@@ -27,11 +28,11 @@ public class RemoteOrderService {
     }
 
     public Flux<Order> getOrders(String userId) {
-        return webClient.get().uri("http://order-service/orders" + "?userId=" + userId)
+        return webClient.get().uri("http://order-service/orders?userId=" + userId)
                 .retrieve().bodyToFlux(Order.class);
     }
 
-    public Mono<Boolean> addOrder(Order order) {
-        return webClient.post().uri("http://order-service/new-order").bodyValue(order).retrieve().bodyToMono(Boolean.class);
+    public Mono<Boolean> addOrder(OrderApplication orderApplication) {
+        return webClient.post().uri("http://order-service/new-order").bodyValue(orderApplication).retrieve().bodyToMono(Boolean.class);
     }
 }

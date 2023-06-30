@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import webpos.order.pojo.Order;
+import webpos.order.pojo.OrderApplication;
 import webpos.order.service.OrderService;
 
 @RestController
@@ -25,7 +26,7 @@ public class OrderController {
     }
 
     @PostMapping("/new-order")
-    public Mono<Boolean> addOrder(@RequestBody Order order) {
-        return service.addOrder(order);
+    public Mono<Boolean> addOrder(@RequestBody OrderApplication orderApplication) {
+        return service.addOrder(orderApplication);
     }
 }

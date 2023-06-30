@@ -7,17 +7,26 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import webpos.api.dto.Order;
+import webpos.api.dto.OrderApplication;
 import webpos.api.dto.Product;
+import webpos.api.dto.User;
 import webpos.api.remote.RemoteOrderService;
 import webpos.api.remote.RemoteProductService;
+import webpos.api.remote.RemoteUserService;
 
 import java.util.List;
 
 @Slf4j
 @RestController
 public class ApiGatewayController {
+    RemoteUserService userService;
     RemoteProductService productService;
     RemoteOrderService orderService;
+
+    @Autowired
+    public void setRemoteUserService(RemoteUserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     public void setRemoteProductService(RemoteProductService productService) {
@@ -30,6 +39,7 @@ public class ApiGatewayController {
     }
 
     @GetMapping("/products/all-products")
+
     public Mono<ResponseEntity<List<Product>>> allProducts() {
         Mono<ResponseEntity<List<Product>>> mono = productService.getProducts().collectList().map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
@@ -60,9 +70,16 @@ public class ApiGatewayController {
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 
-    @PostMapping("/new-order")
-    public Mono<ResponseEntity<Boolean>> addOrder(@RequestBody Order order) {
-        return orderService.addOrder(order).map(ResponseEntity::ok)
+    @PostMapping("/orders/new-order")
+    public Mono<ResponseEntity<Boolean>> addOrder(@RequestBody OrderApplication orderApplication) {
+        return orderService.addOrder(orderApplication).map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build())
+                .onErrorReturn(ResponseEntity.internalServerError().build());
+    }
+
+    @PostMapping("/users/register")
+    public Mono<ResponseEntity<Boolean>> register(@RequestBody User user) {
+        return userService.register(user).map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
