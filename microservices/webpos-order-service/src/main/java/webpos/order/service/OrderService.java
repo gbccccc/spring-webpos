@@ -19,6 +19,7 @@ public class OrderService {
     public void setOrderDB(OrderDB orderDB) {
         this.orderDB = orderDB;
     }
+
     @Autowired
     public void setUserService(RemoteUserService userService) {
         this.userService = userService;
@@ -32,18 +33,20 @@ public class OrderService {
     }
 
     public Flux<Order> getOrdersByUserId(String userId) {
-        return Mono.just(orderDB).flatMapIterable(
-                orderDB1 -> orderDB1.getOrdersByUserId(userId)
+        return Flux.defer(
+                () -> Flux.fromIterable(orderDB.getOrdersByUserId(userId))
         );
     }
 
     public Flux<Order> getAllOrders() {
-        return Mono.just(orderDB).flatMapIterable(OrderDB::getAllOrders);
+        return Flux.defer(
+                () -> Flux.fromIterable(orderDB.getAllOrders())
+        );
     }
 
     public Mono<Order> getOrderById(String orderId) {
-        return Mono.just(orderDB).map(
-                orderDB1 -> orderDB1.getOrder(orderId)
+        return Mono.defer(
+                () -> Mono.just(orderDB.getOrder(orderId))
         ).onErrorResume(e -> Mono.empty());
     }
 

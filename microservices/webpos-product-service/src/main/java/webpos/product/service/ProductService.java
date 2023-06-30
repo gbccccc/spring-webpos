@@ -18,10 +18,14 @@ public class ProductService {
     }
 
     public Flux<Product> getProducts() {
-        return Mono.just(productDB).flatMapIterable(ProductDB::getProducts);
+        return Flux.defer(
+                () -> Flux.fromIterable(productDB.getProducts())
+        );
     }
 
     public Mono<Product> getProductById(String productId) {
-        return Mono.just(productDB).map(productDB1 -> productDB1.getProduct(productId)).onErrorResume(e -> Mono.empty());
+        return Mono.defer(
+                () -> Mono.just(productDB.getProduct(productId))
+        ).onErrorResume(e -> Mono.empty());
     }
 }

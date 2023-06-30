@@ -16,16 +16,17 @@ public class UserService {
     }
 
     public Mono<Boolean> passwordCheck(String userId, String password) {
-        return Mono.just(userDB).map(
-                userDB1 -> userDB1.getUser(userId)
-        ).onErrorResume(e -> Mono.empty()).map(
-                realUser -> realUser.getPassword().equals(password)
-        ).defaultIfEmpty(false);
+        return Mono.defer(
+                () -> {
+                    User user = userDB.getUser(userId);
+                    return Mono.just(user != null && user.getPassword().equals(password));
+                }
+        );
     }
 
     public Mono<Boolean> register(User user) {
-        return Mono.just(userDB).map(
-                userDB1 -> userDB1.addUser(user)
+        return Mono.defer(
+                () -> Mono.just(userDB.addUser(user))
         );
     }
 }
