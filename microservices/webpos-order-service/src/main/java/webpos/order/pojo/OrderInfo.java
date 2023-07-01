@@ -1,4 +1,4 @@
-package webpos.user.pojo;
+package webpos.order.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,10 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("user")
-public class User {
+@Table("order_info")
+public class OrderInfo {
     @Column("id")
-    String userId;
-    @Column("pass")
-    String password;
+    private String orderId;
+    @Column("userId")
+    private String userId;
 }

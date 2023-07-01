@@ -18,19 +18,12 @@ public class UserService {
     }
 
     public Mono<Boolean> passwordCheck(String userId, String password) {
-        return Mono.defer(
-                () -> {
-                    User user = userDB.getUser(userId);
-                    return Mono.just(user != null && user.getPassword().equals(password));
-                }
-        );
+        return userDB.getUser(userId).map(
+                user -> user.getPassword().equals(password)
+        ).defaultIfEmpty(false);
     }
 
     public Mono<User> register(User user) {
-        return Mono.defer(
-                () -> Mono.just(userDB.addUser(user))
-        ).flatMap(
-                success -> success ? Mono.just(user) : Mono.empty()
-        );
+        return userDB.addUser(user);
     }
 }

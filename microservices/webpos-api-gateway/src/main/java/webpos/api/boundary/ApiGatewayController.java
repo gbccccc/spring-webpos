@@ -3,6 +3,7 @@ package webpos.api.boundary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -39,7 +40,7 @@ public class ApiGatewayController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/products/all-products")
+    @GetMapping("/products")
 
     public Mono<ResponseEntity<List<Product>>> allProducts() {
         Mono<ResponseEntity<List<Product>>> mono = productService.getProducts().collectList().map(ResponseEntity::ok)

@@ -1,4 +1,4 @@
-package webpos.user.pojo;
+package webpos.product.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,11 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("user")
-public class User {
+@Table
+public class ImageUrl {
     @Column("id")
-    String userId;
-    @Column("pass")
-    String password;
+    private String asin;
+
+    @Column("image_url_highres")
+    private String image;
 }

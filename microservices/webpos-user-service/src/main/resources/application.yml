@@ -3,6 +3,10 @@ spring:
     name: user-service
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+  r2dbc:
+    url: 'r2dbc:mysql://localhost:3306/webpos?useSSl=true&sueUnicode=true&characterEncoding=UTF-8&serverZoneId=Asia/Shanghai&allowMultiQueries=true'
+    username: root
+    password: root
 mybatis:
   config-location: classpath:mybatis-config.xml
 

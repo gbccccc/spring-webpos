@@ -9,6 +9,9 @@ import webpos.order.database.OrderDB;
 import webpos.order.pojo.Order;
 import webpos.order.pojo.OrderApplication;
 
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
 @Service
 public class OrderService {
     private OrderDB orderDB;
@@ -33,40 +36,30 @@ public class OrderService {
     }
 
     public Flux<Order> getOrdersByUserId(String userId) {
-        return Flux.defer(
-                () -> Flux.fromIterable(orderDB.getOrdersByUserId(userId))
-        );
+        return orderDB.getOrdersByUserId(userId);
     }
 
     public Flux<Order> getAllOrders() {
-        return Flux.defer(
-                () -> Flux.fromIterable(orderDB.getAllOrders())
-        );
+        return orderDB.getAllOrders();
     }
 
     public Mono<Order> getOrderById(String orderId) {
-        return Mono.defer(
-                () -> Mono.just(orderDB.getOrder(orderId))
-        ).onErrorResume(e -> Mono.empty());
+        return orderDB.getOrder(orderId);
     }
 
     public Mono<Order> addOrder(OrderApplication orderApplication) {
+        Mono<Integer> numMono = orderDB.getOrderNum();
         return userService.passwordCheck(orderApplication.getOrder().getUserId(), orderApplication.getPassword())
-                .onErrorReturn(false).flatMap(checkSuccess -> {
-                            if (!checkSuccess) {
-                                return Mono.empty();
-                            }
-
+                .onErrorReturn(false).flatMap(
+                        checkSuccess -> checkSuccess ? Mono.just(true) : Mono.empty()
+                ).zipWith(numMono,
+                        (checkSuccess, orderNum) -> {
                             Order order = orderApplication.getOrder();
-                            String orderId = String.format("O%07d", orderDB.getOrderNum());
-                            order.setOrderId(orderId);
-                            boolean orderSuccess = orderDB.addOrder(order);
-                            if (orderSuccess) {
-                                streamBridge.send("order", order);
-                                return Mono.just(order);
-                            }
-                            return Mono.empty();
+                            order.setOrderId(String.format("O%07d", orderNum));
+                            return order;
                         }
+                ).flatMap(
+                        order -> orderDB.addOrder(order)
                 );
     }
 }
