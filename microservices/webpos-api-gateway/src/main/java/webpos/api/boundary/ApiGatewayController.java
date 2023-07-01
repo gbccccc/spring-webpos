@@ -2,6 +2,7 @@ package webpos.api.boundary;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -71,16 +72,16 @@ public class ApiGatewayController {
     }
 
     @PostMapping("/orders/new-order")
-    public Mono<ResponseEntity<Boolean>> addOrder(@RequestBody OrderApplication orderApplication) {
+    public Mono<ResponseEntity<Order>> addOrder(@RequestBody OrderApplication orderApplication) {
         return orderService.addOrder(orderApplication).map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build())
+                .defaultIfEmpty(ResponseEntity.status(HttpStatusCode.valueOf(401)).build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 
     @PostMapping("/users/register")
-    public Mono<ResponseEntity<Boolean>> register(@RequestBody User user) {
+    public Mono<ResponseEntity<User>> register(@RequestBody User user) {
         return userService.register(user).map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build())
+                .defaultIfEmpty(ResponseEntity.status(HttpStatusCode.valueOf(401)).build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 }

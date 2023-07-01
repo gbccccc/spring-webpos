@@ -32,7 +32,7 @@ public class RemoteOrderService {
                 .retrieve().bodyToFlux(Order.class);
     }
 
-    public Mono<Boolean> addOrder(OrderApplication orderApplication) {
-        return webClient.post().uri("http://order-service/new-order").bodyValue(orderApplication).retrieve().bodyToMono(Boolean.class);
+    public Mono<Order> addOrder(OrderApplication orderApplication) {
+        return webClient.post().uri("http://order-service/new-order").bodyValue(orderApplication).retrieve().bodyToMono(Order.class);
     }
 }

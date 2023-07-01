@@ -22,8 +22,8 @@ public class RemoteUserService {
                 .retrieve().bodyToMono(Boolean.class);
     }
 
-    public Mono<Boolean> register(User user) {
+    public Mono<User> register(User user) {
         return webClient.post().uri("http://user-service/register").bodyValue(user)
-                .retrieve().bodyToMono(Boolean.class);
+                .retrieve().bodyToMono(User.class);
     }
 }

@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public Mono<Boolean> register(@RequestBody User user) {
+    public Mono<User> register(@RequestBody User user) {
         return service.register(user);
     }
 }

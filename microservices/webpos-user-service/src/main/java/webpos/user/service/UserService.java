@@ -6,6 +6,8 @@ import reactor.core.publisher.Mono;
 import webpos.user.database.UserDB;
 import webpos.user.pojo.User;
 
+import java.util.function.Function;
+
 @Service
 public class UserService {
     private UserDB userDB;
@@ -24,9 +26,11 @@ public class UserService {
         );
     }
 
-    public Mono<Boolean> register(User user) {
+    public Mono<User> register(User user) {
         return Mono.defer(
                 () -> Mono.just(userDB.addUser(user))
+        ).flatMap(
+                success -> success ? Mono.just(user) : Mono.empty()
         );
     }
 }

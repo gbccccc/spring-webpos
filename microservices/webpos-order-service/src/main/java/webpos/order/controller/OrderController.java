@@ -26,7 +26,7 @@ public class OrderController {
     }
 
     @PostMapping("/new-order")
-    public Mono<Boolean> addOrder(@RequestBody OrderApplication orderApplication) {
+    public Mono<Order> addOrder(@RequestBody OrderApplication orderApplication) {
         return service.addOrder(orderApplication);
     }
 }

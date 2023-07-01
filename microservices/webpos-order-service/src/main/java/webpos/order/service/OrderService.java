@@ -50,11 +50,11 @@ public class OrderService {
         ).onErrorResume(e -> Mono.empty());
     }
 
-    public Mono<Boolean> addOrder(OrderApplication orderApplication) {
+    public Mono<Order> addOrder(OrderApplication orderApplication) {
         return userService.passwordCheck(orderApplication.getOrder().getUserId(), orderApplication.getPassword())
-                .onErrorReturn(false).map(checkSuccess -> {
+                .onErrorReturn(false).flatMap(checkSuccess -> {
                             if (!checkSuccess) {
-                                return false;
+                                return Mono.empty();
                             }
 
                             Order order = orderApplication.getOrder();
@@ -63,9 +63,9 @@ public class OrderService {
                             boolean orderSuccess = orderDB.addOrder(order);
                             if (orderSuccess) {
                                 streamBridge.send("order", order);
-                                return true;
+                                return Mono.just(order);
                             }
-                            return false;
+                            return Mono.empty();
                         }
                 );
     }
