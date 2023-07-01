@@ -3,17 +3,8 @@ spring:
     name: product-service
   config:
     import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: product-service
-#          uri: lb://product-service
-#          predicates:
-#            - Path=/api/product/**
-#          filters:
-#            - StripPrefix=2
   repository:
-    type: MyBatis
+    type: R2DBC
   r2dbc:
     url: 'r2dbc:mysql://localhost:3306/webpos?useSSl=true&sueUnicode=true&characterEncoding=UTF-8&serverZoneId=Asia/Shanghai&allowMultiQueries=true'
     username: root
