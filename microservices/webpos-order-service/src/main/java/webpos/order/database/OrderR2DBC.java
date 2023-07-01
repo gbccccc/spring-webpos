@@ -1,11 +1,10 @@
 package webpos.order.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
-import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,12 +13,10 @@ import webpos.order.pojo.OrderDetail;
 import webpos.order.pojo.OrderInfo;
 import webpos.order.pojo.OrderItem;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.List;
-import java.util.function.BiFunction;
 
-@Primary
-@Repository
+@Repository("R2DBC")
+@ConditionalOnProperty(value = "spring.repository.type", havingValue = "R2DBC")
 public class OrderR2DBC implements OrderDB {
     private R2dbcEntityTemplate r2dbcEntityTemplate;
 
@@ -76,7 +73,7 @@ public class OrderR2DBC implements OrderDB {
                 orderInfo -> r2dbcEntityTemplate.select(OrderDetail.class).from("order_detail")
                         .matching(Query.query(Criteria.where("orderId").is(orderInfo.getOrderId())))
                         .all().map(
-                                orderDetail -> new OrderItem(orderDetail.getOrderId(), orderDetail.getNum())
+                                orderDetail -> new OrderItem(orderDetail.getAsin(), orderDetail.getNum())
                         ).collectList()
         );
         return orderItemFlux.zipWith(orderInfoFlux,

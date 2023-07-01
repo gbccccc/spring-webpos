@@ -1,13 +1,11 @@
 package webpos.product.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.r2dbc.convert.MappingR2dbcConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Repository;
-import reactor.core.CorePublisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import webpos.product.pojo.Category;
@@ -17,8 +15,8 @@ import webpos.product.pojo.SimpleProduct;
 
 import java.util.List;
 
-@Primary
-@Repository
+@Repository("R2DBC")
+@ConditionalOnProperty(value = "spring.repository.type", havingValue = "R2DBC")
 public class ProductR2DBC implements ProductDB{
     private R2dbcEntityTemplate r2dbcEntityTemplate;
 

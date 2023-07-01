@@ -43,11 +43,9 @@ public class ApiGatewayController {
     @GetMapping("/products")
 
     public Mono<ResponseEntity<List<Product>>> allProducts() {
-        Mono<ResponseEntity<List<Product>>> mono = productService.getProducts().collectList().map(ResponseEntity::ok)
+        return productService.getProducts().collectList().map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
-        log.info("111");
-        return mono;
     }
 
     @GetMapping("/products/{id}")

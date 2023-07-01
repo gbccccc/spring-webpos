@@ -22,9 +22,7 @@ public class ProductController {
 
     @GetMapping("/products")
     public Flux<Product> allProducts() {
-        Flux<Product> flux = service.getProducts();
-        log.info("222");
-        return flux;
+        return service.getProducts();
     }
 
     @GetMapping("/products/{productId}")

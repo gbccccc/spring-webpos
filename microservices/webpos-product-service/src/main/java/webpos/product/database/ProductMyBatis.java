@@ -4,6 +4,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,7 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@Repository
+@Repository("MyBatis")
+@ConditionalOnProperty(value = "spring.repository.type", havingValue = "MyBatis")
 public class ProductMyBatis implements ProductDB {
     private SqlSessionFactory sqlSessionFactory;
 

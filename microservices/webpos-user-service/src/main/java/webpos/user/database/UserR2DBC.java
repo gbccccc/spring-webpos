@@ -1,7 +1,7 @@
 package webpos.user.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import webpos.user.pojo.User;
 
-@Primary
-@Repository
+@Repository("R2DBC")
+@ConditionalOnProperty(value = "spring.repository.type", havingValue = "R2DBC")
 public class UserR2DBC implements UserDB{
     private R2dbcEntityTemplate r2dbcEntityTemplate;
 
