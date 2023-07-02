@@ -60,6 +60,8 @@ public class OrderService {
                         }
                 ).flatMap(
                         order -> orderDB.addOrder(order)
+                ).doOnNext(
+                        order -> streamBridge.send("order", order)
                 );
     }
 }
