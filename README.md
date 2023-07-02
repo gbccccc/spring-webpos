@@ -91,7 +91,7 @@ private Flux<Order> assemblyOrder(Flux<OrderInfo> orderInfoFlux) {
 
 所有微服务各启动一个，均运行在真机上。
 
-使用 Gatling 对系统进行测试，模拟用户操作的脚本唯于 webpos-api-gateway 工程的 resouces 目录下。测试并发数为 2000，重复2次，另外由于服务初次启动时性能表现较差，以下测试结果均为性能稳定时的结果。
+使用 Gatling 对系统进行测试，模拟用户操作的脚本唯于 webpos-api-gateway 工程的 resouces 目录下。测试并发数为 2000，重复2次，另外由于服务初次启动时性能表现较差，以下测试结果均为性能稳定后的结果。
 
 使用 MyBatis 和 R2DBC 的测试结果分别如下：
 
