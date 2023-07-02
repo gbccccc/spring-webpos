@@ -80,7 +80,7 @@ public class ApiGatewayController {
     @PostMapping("/users/register")
     public Mono<ResponseEntity<User>> register(@RequestBody User user) {
         return userService.register(user).map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.status(HttpStatusCode.valueOf(401)).build())
+                .defaultIfEmpty(ResponseEntity.status(HttpStatusCode.valueOf(400)).build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 }
