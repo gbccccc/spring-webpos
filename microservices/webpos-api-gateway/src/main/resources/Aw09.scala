@@ -15,7 +15,7 @@ class Aw09 extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
   val headers_json = Map("Content-Type" -> "application/json")
   val scn = scenario("Testing")
-    .repeat(10) {
+    .repeat(2) {
       exec(
         http("check products page 0")
           .get("/products?pageId=0&numPerPage=10")
@@ -26,19 +26,7 @@ class Aw09 extends Simulation {
         http("check product 0071480935")
           .get("/products/0071480935")
       )
-      .pause(1).exec(
-        http("add order wrong password")
-          .post("/orders/new-order")
-          .headers(headers_json)
-          .body(StringBody("{\"password\":\"wrong\",\"order\":{\"userId\":\"user444\",\"items\":[{\"asin\":\"0030672120\",\"num\":9},{\"asin\":\"007739688X\",\"num\":5},{\"asin\":\"0077479777\",\"num\":1}]}}").asJSON)
-      )
-      // .pause(1).exec(
-      //   http("add order")
-      //     .post("/orders/new-order")
-      //     .headers(headers_json)
-      //     .body(StringBody("{\"password\":\"444\",\"order\":{\"userId\":\"user444\",\"items\":[{\"asin\":\"0030672120\",\"num\":9},{\"asin\":\"007739688X\",\"num\":5},{\"asin\":\"0077479777\",\"num\":1}]}}").asJSON)
-      // )
-      .pause(1).exec(
+        .pause(1).exec(
         http("check orders")
           .get("/orders")
       )
