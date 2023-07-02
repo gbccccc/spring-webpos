@@ -18,8 +18,9 @@ public class RemoteProductService {
         webClient = webClientBuilder.build();
     }
 
-    public Flux<Product> getProducts() {
-        return webClient.get().uri("http://product-service/products").retrieve().bodyToFlux(Product.class);
+    public Flux<Product> getProducts(int pageId, int numPerPage) {
+        return webClient.get().uri("http://product-service/products?pageId=" + pageId + "&numPerPage=" + numPerPage)
+                .retrieve().bodyToFlux(Product.class);
     }
 
     public Mono<Product> getProductById(String productId) {

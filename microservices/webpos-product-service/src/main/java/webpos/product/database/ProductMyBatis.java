@@ -47,7 +47,6 @@ public class ProductMyBatis implements ProductDB {
                     }
 
                     List<Product> finalProducts = products;
-
                     return finalProducts == null ? Flux.empty() : Flux.fromIterable(finalProducts);
                 }
         );

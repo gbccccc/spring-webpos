@@ -42,8 +42,8 @@ public class ApiGatewayController {
 
     @GetMapping("/products")
 
-    public Mono<ResponseEntity<List<Product>>> allProducts() {
-        return productService.getProducts().collectList().map(ResponseEntity::ok)
+    public Mono<ResponseEntity<List<Product>>> allProducts(@RequestParam int pageId, @RequestParam int numPerPage) {
+        return productService.getProducts(pageId, numPerPage).collectList().map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }

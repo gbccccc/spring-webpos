@@ -3,6 +3,7 @@ package webpos.product.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,8 +22,8 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Flux<Product> allProducts() {
-        return service.getProducts();
+    public Flux<Product> allProducts(@RequestParam int pageId, @RequestParam int numPerPage) {
+        return service.getProducts(pageId, numPerPage);
     }
 
     @GetMapping("/products/{productId}")
