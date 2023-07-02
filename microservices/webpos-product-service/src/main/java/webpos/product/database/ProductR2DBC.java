@@ -1,5 +1,6 @@
 package webpos.product.database;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -14,10 +15,12 @@ import webpos.product.pojo.Product;
 import webpos.product.pojo.SimpleProduct;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 @Repository("R2DBC")
 @ConditionalOnProperty(value = "spring.repository.type", havingValue = "R2DBC")
-public class ProductR2DBC implements ProductDB{
+public class ProductR2DBC implements ProductDB {
     private R2dbcEntityTemplate r2dbcEntityTemplate;
 
     @Autowired
@@ -26,8 +29,16 @@ public class ProductR2DBC implements ProductDB{
     }
 
     @Override
-    public Flux<Product> getProducts() {
-        Flux<SimpleProduct> simpleProductFlux = r2dbcEntityTemplate.select(SimpleProduct.class).from("products").all();
+    public Flux<Product> getProducts(int pageId, int numPerPage) {
+        AtomicInteger j = new AtomicInteger(0);
+        Flux<SimpleProduct> simpleProductFlux = r2dbcEntityTemplate.select(SimpleProduct.class).from("products").all()
+                .take((long) pageId * numPerPage + numPerPage)
+                .filter(
+                        product -> {
+                            j.getAndIncrement();
+                            return j.get() > pageId * numPerPage;
+                        }
+                );
         return assemblyProducts(simpleProductFlux);
     }
 
@@ -40,7 +51,7 @@ public class ProductR2DBC implements ProductDB{
         return assemblyProducts(simpleProductFlux).next();
     }
 
-    private Flux<Product> assemblyProducts(Flux<SimpleProduct> simpleProductFlux){
+    private Flux<Product> assemblyProducts(Flux<SimpleProduct> simpleProductFlux) {
         Flux<List<String>> categoriesFlux = simpleProductFlux.flatMap(
                 simpleProduct -> r2dbcEntityTemplate.select(Category.class).from("category")
                         .matching(Query.query(Criteria.where("id").is(simpleProduct.getAsin())))

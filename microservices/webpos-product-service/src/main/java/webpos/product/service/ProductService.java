@@ -22,13 +22,7 @@ public class ProductService {
     }
 
     public Flux<Product> getProducts(int pageId, int numPerPage) {
-        AtomicInteger index = new AtomicInteger(-1);
-        return productDB.getProducts().filter(
-                product -> {
-                    index.getAndIncrement();
-                    return pageId * numPerPage < index.get() && index.get() <= pageId * numPerPage + numPerPage;
-                }
-        );
+        return productDB.getProducts(pageId, numPerPage);
     }
 
     public Mono<Product> getProductById(String productId) {

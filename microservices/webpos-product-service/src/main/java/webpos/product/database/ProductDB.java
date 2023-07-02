@@ -7,7 +7,7 @@ import webpos.product.pojo.Product;
 import java.util.List;
 
 public interface ProductDB {
-    Flux<Product> getProducts();
+    Flux<Product> getProducts(int pageId, int numPerPage);
 
     Mono<Product> getProduct(String productId);
 }
