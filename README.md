@@ -2,7 +2,7 @@
 
 基于 AW08 ，为 webpos 系统实现了响应式 API ，另添加了 `user-service` 微服务，用于注册用户和密码校验。
 
-继承自先前作业的功能有：RESTful API 、处可理商品数据并写入 MySQL 数据库的 batch-server 工程、使用 RabbitMQ 与 webpos 工程交互的 delivery-server 工程。
+继承自先前作业的功能有：RESTful API 、可处理商品数据并写入 MySQL 数据库的 batch-server 工程、使用 RabbitMQ 与 webpos 工程交互的 delivery-server 工程。
 
 ### 微服务部分
 
