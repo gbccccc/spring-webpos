@@ -2,6 +2,8 @@
 
 基于 AW08 ，为 webpos 系统实现了响应式 API ，另添加了 `user-service` 微服务，用于注册用户和密码校验。
 
+继承自先前作业的功能有：RESTful API 、处可理商品数据并写入 MySQL 数据库的 batch-server 工程、使用 RabbitMQ 与 webpos 工程交互的 delivery-server 工程。
+
 ### 微服务部分
 
 ##### 新增 API
@@ -28,7 +30,7 @@ Post API，传入一个 `User` 的 JSON ，`user-service` 会在用户名不重�
 
 #### 持久层框架
 
-实现了使用 MyBatis 和 R2DBC 两种持久层框架的响应式 API，可在微服务子工程的 `application.yml` 中改变 `spring.repository.type` 即可更换持久层框架。
+分别实现了使用 MyBatis 和 R2DBC 两种持久层框架的响应式 API，在微服务子工程的 `application.yml` 中设置`spring.repository.type` 的值为 `MyBatis` 或 `R2DBC` 即可更换持久层框架。
 
 MyBatis 并不原生支持响应式 API，需要使用 `defer()` 方法创建 `Flux` 及 `Mono` 以规避，而不能使用 `just()` ，否则会在 `Flux` 或 `Mono` 生成阶段就发生阻塞。
 
