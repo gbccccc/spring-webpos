@@ -37,7 +37,6 @@ public class ProductMyBatis implements ProductDB {
 
     @Override
     public Flux<Product> getProducts(int pageId, int numPerPage) {
-        AtomicInteger j = new AtomicInteger(0);
         return Flux.defer(
                 () -> {
                     List<Product> products = null;
@@ -51,12 +50,8 @@ public class ProductMyBatis implements ProductDB {
                     List<Product> finalProducts = products;
                     return finalProducts == null ? Flux.empty() : Flux.fromIterable(finalProducts);
                 }
-        ).take((long) pageId * numPerPage + numPerPage).filter(
-                product -> {
-                    j.getAndIncrement();
-                    return j.get() > pageId * numPerPage;
-                }
-        );
+        ).take((long) pageId * numPerPage + numPerPage)
+                .skip((long) pageId * numPerPage);
     }
 
     @Override

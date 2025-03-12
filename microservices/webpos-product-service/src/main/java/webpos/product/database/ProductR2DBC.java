@@ -30,15 +30,9 @@ public class ProductR2DBC implements ProductDB {
 
     @Override
     public Flux<Product> getProducts(int pageId, int numPerPage) {
-        AtomicInteger j = new AtomicInteger(0);
         Flux<SimpleProduct> simpleProductFlux = r2dbcEntityTemplate.select(SimpleProduct.class).from("products").all()
                 .take((long) pageId * numPerPage + numPerPage)
-                .filter(
-                        product -> {
-                            j.getAndIncrement();
-                            return j.get() > pageId * numPerPage;
-                        }
-                );
+                .skip((long) pageId * numPerPage);
         return assemblyProducts(simpleProductFlux);
     }
 
